@@ -6,39 +6,35 @@
         <div class="stat-label">已标注数量</div>
         <div class="stat-value">{{ annotationStats.total || 0 }}</div>
       </div>
-      <div class="stat-item">
-        <div class="stat-label">毒性文本数</div>
-        <div class="stat-value">{{ annotationStats.toxic || 0 }}</div>
-      </div>
-      <div class="stat-item">
-        <div class="stat-label">非毒性文本数</div>
-        <div class="stat-value">{{ annotationStats.non_toxic || 0 }}</div>
-      </div>
     </el-card>
   </div>
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import store from '../store'
 
 export default {
   name: 'DataStatisticsView',
-  computed: {
-    ...mapState(['annotationStats']),
+  data() {
+    return {
+        annotationStats: {"total": 1}
+    }
   },
   created() {
-    this.fetchAnnotationStats();
+    this.fetchAnnotationStats()
   },
+
   methods: {
     async fetchAnnotationStats() {
-      await this.$store.dispatch('fetchAnnotationStats');
+      await store.dispatch('fetchAnnotationStats');
+      this.annotationStats = store.state.annotationStats;
     },
   },
 };
 </script>
 
 <style scoped>
-.data-statistics-container {
+/* .data-statistics-container {
   padding: 20px;
 }
 .stat-item {
@@ -49,5 +45,5 @@ export default {
 }
 .stat-value {
   color: #409eff;
-}
+} */
 </style>

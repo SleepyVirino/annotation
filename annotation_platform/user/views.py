@@ -11,6 +11,9 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.permissions import IsAuthenticated, AllowAny
 
 from .serializers import UserSerializer, UserProfileSerializer
+from annotation.models import (
+    ToxicAnnotation
+)
 
 
 class RegisterView(APIView):
@@ -68,3 +71,17 @@ class LogoutView(APIView):
         # 用户退出登录
         auth_logout(request)
         return Response({'message': '退出成功'}, status=status.HTTP_200_OK)
+
+
+class DataStatisticsView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        # 获取当前用户的 ToxicAnnotation 数据
+        toxic_annotations = ToxicAnnotation.objects.filter(user=request.user)
+
+        total_annotations = toxic_annotations.count()
+
+        return Response({
+            'total': total_annotations,
+        })

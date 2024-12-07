@@ -46,7 +46,12 @@ export default createStore({
       state.error = null
     },
     SET_ANNOTATION_STATS(state, stats) {
-      state.annotationStats = stats;
+      state.annotationStats = stats
+      if (stats) {
+        sessionStorage.setItem('annotationStats', JSON.stringify(stats))
+      } else {
+        sessionStorage.removeItem('annotationStats')
+      } 
     }
   },
 
@@ -75,9 +80,9 @@ export default createStore({
       }
     },
 
-    async fetchUserProfile({ commit }, userData) {
+    async fetchUserProfile({ commit }) {
       try {
-        const response = await axios.get('/user/profile/', userData)
+        const response = await axios.get('/user/profile/', this.state.user)
         commit('SET_USER', response.data)
         return response.data
       } catch (error) {
@@ -98,16 +103,19 @@ export default createStore({
     },
     logout({ commit }) {
       commit('SET_TOKEN', null)
-      commit('SET_USER', null)
+      commit('SET_USER', null)  
+      commit('SET_ANNOTATION_STATS', null)
       sessionStorage.removeItem('token')
       sessionStorage.removeItem('user')
+      sessionStorage.removeItem('annotationStats')
     },
     async fetchAnnotationStats({ commit }) {
       try {
-        const response = await axios.get('/annotation/my-annotations/stats/');
+        const response = await axios.get('/user/data-statistics/', this.state.user);
         commit('SET_ANNOTATION_STATS', response.data);
       } catch (error) {
-        console.error('获取标注统计失败:', error);
+        commit('SET_ERROR', error.response?.data?.error || '获取标注统计失败')
+        throw error
       }
     }
   }

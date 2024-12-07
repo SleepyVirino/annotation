@@ -8,6 +8,7 @@ class AnnotationModule(models.Model):
     disclaimer = models.TextField(verbose_name="模块声明")
     need_times = models.IntegerField(default=5, verbose_name="标注次数")
 
+
     class Meta:
         db_table = 'annotation_module'
         verbose_name = "标注模块"

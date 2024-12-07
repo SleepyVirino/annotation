@@ -3,28 +3,23 @@
   <div class="main-container">
     <el-container>
       <el-aside>
-        <el-menu default-active="1" class="sidebar" router>
-          <el-sub-menu index="1">
+        <el-menu default-active="/main/person" class="sidebar" router>
+          <el-sub-menu index="/main/person">
             <template v-slot:title>
-              <i class="el-icon-user"></i>
               <span>个人中心</span>
             </template>
-            <el-menu-item index="profile">
-              <i class="el-icon-user-solid"></i>
+            <el-menu-item index="/main/person/profile">
               <span>个人资料</span>
             </el-menu-item>
-            <el-menu-item index="data-statistics">
-              <i class="el-icon-data-analysis"></i>
+            <el-menu-item index="/main/person/data-statistics">
               <span>数据统计</span>
             </el-menu-item>
           </el-sub-menu>
-          <el-sub-menu index="2">
+          <el-sub-menu index="/main/annotation">
             <template v-slot:title>
-              <i class="el-icon-document"></i>
               <span>数据标注</span>
             </template>
-            <el-menu-item index="toxic-annotation">
-              <i class="el-icon-edit"></i>
+            <el-menu-item index="/main/annotation/toxic-annotation">
               <span>毒性文本标注</span>
             </el-menu-item>
           </el-sub-menu>
@@ -32,6 +27,7 @@
       </el-aside>
       <el-container>
         <el-header>
+          <router-link :to="{ name: 'Home' }">首页</router-link>
           <el-button v-if="isLoggedIn" type="primary" @click="logout">退出登录</el-button>
           <el-button v-else type="primary" @click="login">登录</el-button>
         </el-header>
@@ -74,7 +70,7 @@ export default {
       // 清除 sessionStorage 并重置状态
       store.dispatch('logout');
       this.isLoggedIn = false;
-      this.$router.push({ name: 'Login' }); // 返回到登录页面
+      this.$router.push({ name: 'Home' }); // 返回到登录页面
     }
   },
   mounted() {
@@ -85,7 +81,7 @@ export default {
 </script>
 
 <style scoped>
-.main-container {
+/* .main-container {
   padding: 20px;
   background-color: #f0f2f5;
 }
@@ -118,6 +114,6 @@ export default {
 
 .el-button {
   margin-left: 10px;
-}
+} */
 
 </style>

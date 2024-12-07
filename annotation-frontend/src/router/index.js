@@ -1,47 +1,58 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import Login from '../views/Login.vue'
-import Register from '../views/Register.vue'
-import ToxicAnnotation from '../views/ToxicAnnotation.vue'
-import Main from '../views/Main.vue'
-import Home from '../views/Home.vue'
-import Profile from '../views/Profile.vue'
-import DataStatistics from '../views/DataStatistics.vue'
+import LoginView from '../views/Login.vue'
+import RegisterView from '../views/Register.vue'
+import ToxicAnnotationView from '../views/ToxicAnnotation.vue'
+import MainView from '../views/Main.vue'
+import HomeView from '../views/Home.vue'
+import ProfileView from '../views/Profile.vue'
+import DataStatisticsView from '../views/DataStatistics.vue'
 
 import store from '../store'
 
 const routes = [
   {
-    path: '/',
-    redirect: '/main'
+    path: '/',  
+    name: 'Root',
+    redirect: '/main/home'
   },
   {
     path: '/login',
     name: 'Login',
-    component: Login
+    component: LoginView
   },
   {
     path: '/register',
     name: 'Register',
-    component: Register
-  },
-  {
-    path: '/annotation',
-    name: 'ToxicAnnotation',
-    component: ToxicAnnotation,
-    meta: { requiresAuth: true }
+    component: RegisterView
   },
   {
     path: '/main',
     name: 'Main',
-    component: Main,
+    component: MainView,
     redirect: '/main/home',
     children: [
-      {  path: 'profile', name: 'Profile', component: Profile},
-      {  path: 'home', name: 'Home', component: Home},
-      {  path: 'data-statistics', name: 'DataStatistics', component: DataStatistics}
+      { path: 'home', name: 'Home', component: HomeView }, // 相对路径
+      {  
+        path: 'person', // 相对路径
+        name: 'Person', 
+        meta: { requiresAuth: true },
+        children: [
+          { path: 'profile', name: 'Profile', component: ProfileView }, // 相对路径
+          { path: 'data-statistics', name: 'DataStatistics', component: DataStatisticsView } // 相对路径
+        ]
+      },
+      {  
+        path: 'annotation', // 相对路径
+        name: 'Annotation', 
+        meta: { requiresAuth: true },
+        children: [
+          { path: 'toxic-annotation', name: 'ToxicAnnotation', component: ToxicAnnotationView } // 相对路径
+        ]
+      }
     ]
   }
 ]
+
 
 const router = createRouter({
   history: createWebHistory(),

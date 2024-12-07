@@ -58,22 +58,19 @@ import store from '../store'
 
 export default {
   name: 'ProfileView',
-//   created() {
-//   this.fetchUserProfile();
-// },
-methods: {
-//   async fetchUserProfile() {    
-//     console.log(store.state.user)
-//     await store.dispatch('fetchUserProfile', store.state.user);
-//     this.user = store.state.user
-//     console.log(this.user)
-//   },
-  async updateUser() {
-      await store.dispatch('updateUser', this.user)   
+
+
+  methods: {
+    async fetchUserProfile() {
+      await store.dispatch('fetchUserProfile');
+    },
+    async updateUser() {
+      await store.dispatch('updateUser', this.user)
+      this.user = store.state.user;
     }
-}
-,
+  },
   data() {
+    this.fetchUserProfile();
     return {
       user: store.state.user
     }
@@ -82,7 +79,7 @@ methods: {
 </script>
 
 <style scoped>
-.profile-container {
+/* .profile-container {
   padding: 20px;
-}
+} */
 </style> 
