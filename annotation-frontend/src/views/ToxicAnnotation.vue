@@ -63,13 +63,18 @@
           </el-form-item>
 
           <!-- 毒性原因 -->
-          <el-form-item label="毒性原因" prop="toxic_reason">
-            <el-input
-              type="textarea"
-              v-model="annotationForm.toxic_reason"
-              :rows="3"
-              placeholder="请详细说明该文本的毒性原因"
-            />
+          <el-form-item label="毒性风险" prop="toxic_risk">
+            <el-select
+              v-model="annotationForm.toxic_risk"
+              placeholder="请选择毒性风险"
+            >
+              <el-option
+                v-for="risk in availableRisks"
+                :key="risk.id"
+                :label="risk.risk"
+                :value="risk.id"
+              />  
+            </el-select>
           </el-form-item>
         </template>
 
@@ -90,42 +95,17 @@
       :image-size="200"
     >
       <template #description>
-        <p>{{ noTextMessage || '暂无可标注的文本' }}</p>
+        <p>{{ '暂无可标注的文本' }}</p>
       </template>
     </el-empty>
 
-    <!-- 标注进度 -->
-    <el-card v-if="annotationStats" class="stats-card">
-      <template #header>
-        <div class="stats-header">
-          <span>标注进度</span>
-        </div>
-      </template>
-      <el-row :gutter="20">
-        <el-col :span="8">
-          <div class="stat-item">
-            <div class="stat-label">已标注数量</div>
-            <div class="stat-value">{{ annotationStats.total || 0 }}</div>
-          </div>
-        </el-col>
-        <el-col :span="8">
-          <div class="stat-item">
-            <div class="stat-label">毒性文本数</div>
-            <div class="stat-value">{{ annotationStats.toxic || 0 }}</div>
-          </div>
-        </el-col>
-        <el-col :span="8">
-          <div class="stat-item">
-            <div class="stat-label">非毒性文本数</div>
-            <div class="stat-value">{{ annotationStats.non_toxic || 0 }}</div>
-          </div>
-        </el-col>
-      </el-row>
-    </el-card>
   </div>
 </template>
 
 <script>
+
+import axios from '../utils/axios'
+import store from '../store'
 export default {
   name: 'ToxicAnnotationView',
   data() {
@@ -137,14 +117,13 @@ export default {
       },
       currentText: null,
       availableLabels: [],
+      availableRisks: [],
       annotationForm: {
         is_toxic: false,
         toxic_label: null,
-        toxic_reason: ''
+        toxic_risk: null,
       },
       submitting: false,
-      annotationStats: null,
-      noTextMessage: '',
       rules: {
         toxic_label: [
           { 
@@ -160,14 +139,14 @@ export default {
             }
           }
         ],
-        toxic_reason: [
+        toxic_risk: [
           {
             required: true,
-            message: '请输入毒性原因',
-            trigger: 'blur',
+            message: '请选择毒性风险',
+            trigger: 'change',
             validator: (rule, value, callback) => {
               if (this.annotationForm.is_toxic && !value) {
-                callback(new Error('毒性文本必须说明原因'))
+                callback(new Error('毒性文本必须选择风险'))
               } else {
                 callback()
               }
@@ -179,31 +158,33 @@ export default {
   },
   async created() {
     await this.getModuleInfo()
+    await this.fetchAvailableLabels()
+    await this.fetchAvailableRisks()
     await this.getNextText()
-    await this.fetchAnnotationStats()
   },
   methods: {
     async getModuleInfo() {
-      try {
-        const response = await this.$axios.get('/annotation/module-info/')
+        const response = await axios.get('/annotation/annotation-modules/1/')
         this.moduleInfo = response.data
-      } catch (error) {
-        this.$message.error('获取模块信息失败')
-      }
     },
     
+    async fetchAvailableLabels() {
+      const response = await axios.get('/annotation/toxic-labels/')
+      this.availableLabels = response.data
+    },
+
+    async fetchAvailableRisks() {
+      const response = await axios.get('/annotation/toxic-risks/')
+      this.availableRisks = response.data
+    },
+
     async getNextText() {
-      try {
-        const response = await this.$axios.get('/annotation/get-text/')
-        this.currentText = response.data.text
-        this.availableLabels = response.data.available_labels
-      } catch (error) {
-        if (error.response?.status === 404) {
-          this.noTextMessage = error.response.data.message
-        } else {
-          this.$message.error('获取文本失败')
+        const response = await axios.get('/annotation/toxic-texts/unannotated/?limit=1')
+        if (response.data.length === 0) {
+          this.currentText = null
+          return
         }
-      }
+        this.currentText = response.data[0]
     },
 
     async submitAnnotation() {
@@ -211,10 +192,11 @@ export default {
         await this.$refs.annotationForm.validate()
         this.submitting = true
         
-        await this.$axios.post('/annotation/submit-annotation/', {
+        await axios.post('/annotation/toxic-annotations/', {
           text: this.currentText.id,
+          user: store.state.user.id,
           is_toxic: this.annotationForm.is_toxic,
-          toxic_reason: this.annotationForm.is_toxic ? this.annotationForm.toxic_reason : null,
+          toxic_risk: this.annotationForm.is_toxic ? this.annotationForm.toxic_risk : null,
           toxic_label: this.annotationForm.is_toxic ? this.annotationForm.toxic_label : null
         })
 
@@ -240,20 +222,11 @@ export default {
       await this.getNextText()
     },
 
-    async fetchAnnotationStats() {
-      try {
-        const response = await this.$axios.get('/annotation/my-annotations/stats/')
-        this.annotationStats = response.data
-      } catch (error) {
-        console.error('获取标注统计失败:', error)
-      }
-    },
-
     resetForm() {
       this.annotationForm = {
         is_toxic: false,
         toxic_label: null,
-        toxic_reason: ''
+        toxic_risk: null
       }
       if (this.$refs.annotationForm) {
         this.$refs.annotationForm.resetFields()
@@ -264,7 +237,7 @@ export default {
 </script>
 
 <style scoped>
-.annotation-container {
+/* .annotation-container {
   max-width: 800px;
   margin: 20px auto;
   padding: 20px;
@@ -332,5 +305,5 @@ export default {
 .el-button {
   min-width: 120px;
   margin: 0 10px;
-}
+} */
 </style>

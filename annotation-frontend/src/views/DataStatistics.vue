@@ -4,7 +4,8 @@
     <el-card>
       <div class="stat-item">
         <div class="stat-label">已标注数量</div>
-        <div class="stat-value">{{ annotationStats.total || 0 }}</div>
+        <div class="stat-value" v-if="annotationStats">{{ annotationStats.total || 0 }}</div>
+        <div class="stat-value" v-else>0</div>
       </div>
     </el-card>
   </div>
@@ -17,11 +18,11 @@ export default {
   name: 'DataStatisticsView',
   data() {
     return {
-        annotationStats: {"total": 1}
+        annotationStats: store.state.annotationStats
     }
   },
-  created() {
-    this.fetchAnnotationStats()
+  async created() {
+    await this.fetchAnnotationStats()
   },
 
   methods: {

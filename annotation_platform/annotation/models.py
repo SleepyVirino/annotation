@@ -8,7 +8,6 @@ class AnnotationModule(models.Model):
     disclaimer = models.TextField(verbose_name="模块声明")
     need_times = models.IntegerField(default=5, verbose_name="标注次数")
 
-
     class Meta:
         db_table = 'annotation_module'
         verbose_name = "标注模块"
@@ -80,4 +79,4 @@ class ToxicAnnotation(models.Model):
         verbose_name_plural = '标注记录'
 
     def __str__(self):
-        return self.text
+        return str(self.text)

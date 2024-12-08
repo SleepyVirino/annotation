@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import AnnotationModule, ToxicText, ToxicLabel, ToxicAnnotation
+from .models import AnnotationModule, ToxicText, ToxicLabel, ToxicAnnotation, ToxicRisk
 
 
 class AnnotationModuleSerializer(serializers.ModelSerializer):
@@ -17,6 +17,12 @@ class ToxicTextSerializer(serializers.ModelSerializer):
 class ToxicLabelSerializer(serializers.ModelSerializer):
     class Meta:
         model = ToxicLabel
+        fields = '__all__'
+
+
+class ToxicRiskSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ToxicRisk
         fields = '__all__'
 
 

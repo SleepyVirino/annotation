@@ -3,6 +3,7 @@ from .views import (
     AnnotationModuleViewSet,
     ToxicTextViewSet,
     ToxicLabelViewSet,
+    ToxicRiskViewSet,
     ToxicAnnotationViewSet,
 )
 
@@ -12,6 +13,7 @@ router = DefaultRouter()
 router.register(r'annotation-modules', AnnotationModuleViewSet)
 router.register(r'toxic-texts', ToxicTextViewSet)
 router.register(r'toxic-labels', ToxicLabelViewSet)
+router.register(r'toxic-risks', ToxicRiskViewSet)
 router.register(r'toxic-annotations', ToxicAnnotationViewSet)
 
 urlpatterns = router.urls
