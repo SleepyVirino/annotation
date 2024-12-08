@@ -6,6 +6,7 @@ import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
 import axios from './utils/axios'
 
+
 const app = createApp(App)
 
 // 将axios实例添加到全局属性

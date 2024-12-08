@@ -22,12 +22,6 @@ export default {
     return {
       zhCn
     }
-  },
-  created() {
-    // 如果有token，获取用户信息
-    // if (this.$store.getters.isAuthenticated) {
-    //   this.$store.dispatch('fetchUserProfile')
-    // }
   }
 }
 </script>

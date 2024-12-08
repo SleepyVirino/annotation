@@ -27,16 +27,5 @@ export default {
 </script>
 
 <style scoped>
-.main-default {
-    padding: 20px;
-}
 
-h1 {
-    color: #409eff;
-}
-
-.el-card {
-    margin-top: 20px;
-    padding: 15px;
-}
 </style>

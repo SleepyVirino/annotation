@@ -24,7 +24,7 @@ class UserAdmin(admin.ModelAdmin):
         """
         annotations = ToxicAnnotation.objects.filter(user=obj)
         if annotations.exists():
-            return ", ".join(f"ID:{ann.id}" for ann in annotations[:10])  # 显示前10条记录ID
+            return ", ".join(f"ID:{ann.id}, Text:{ann.text}" for ann in annotations[:10])  # 显示前10条记录ID
         return "无标注记录"
 
     all_annotations.short_description = '标注记录（部分展示）'

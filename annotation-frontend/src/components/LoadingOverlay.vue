@@ -8,12 +8,14 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import store from '../store'
 
 export default {
   name: 'LoadingOverlay',
   computed: {
-    ...mapGetters(['isLoading'])
+    isLoading() {
+      return store.state.isLoading
+    }
   }
 }
 </script>

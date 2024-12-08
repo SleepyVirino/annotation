@@ -25,8 +25,8 @@ class ToxicText(models.Model):
 
     class Meta:
         db_table = 'toxic_text'
-        verbose_name = '待标注文本'
-        verbose_name_plural = '待标注文本'
+        verbose_name = '标注文本'
+        verbose_name_plural = '标注文本'
 
     def __str__(self):
         return self.content[0:20]
@@ -74,7 +74,9 @@ class ToxicAnnotation(models.Model):
 
     class Meta:
         db_table = 'toxic_annotation'
-        unique_together = ('text', 'user')
+        constraints = [
+            models.UniqueConstraint(fields=['text', 'user'], name='unique_text_user')
+        ]
         verbose_name = '标注记录'
         verbose_name_plural = '标注记录'
 

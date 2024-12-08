@@ -35,16 +35,5 @@ export default {
 </script>
 
 <style scoped>
-/* .data-statistics-container {
-  padding: 20px;
-}
-.stat-item {
-  margin-bottom: 10px;
-}
-.stat-label {
-  font-weight: bold;
-}
-.stat-value {
-  color: #409eff;
-} */
+
 </style>

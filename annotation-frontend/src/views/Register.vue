@@ -129,57 +129,5 @@ export default {
 </script>
 
 <style scoped>
-.register-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-  padding: 20px;
-  background-color: #f5f7fa;
-}
 
-.register-card {
-  width: 500px;
-  border-radius: 10px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-}
-
-h2 {
-  text-align: center;
-  margin-bottom: 30px;
-  color: #303133;
-}
-
-.el-form-item {
-  margin-bottom: 20px;
-}
-
-.el-input, .el-select {
-  border-radius: 5px;
-}
-
-.submit-button {
-  width: 120px;
-  margin-right: 10px;
-}
-
-.link-button {
-  width: 120px;
-  background-color: #f0f0f0;
-  color: #409eff;
-}
-
-.el-button:hover.link-button {
-  background-color: #e0e0e0;
-}
-
-.el-button:hover.submit-button {
-  background-color: #409eff;
-  color: white;
-}
-
-.el-form-item:last-child {
-  margin-bottom: 0;
-  text-align: center;
-}
 </style>

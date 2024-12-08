@@ -79,7 +79,4 @@ export default {
 </script>
 
 <style scoped>
-/* .profile-container {
-  padding: 20px;
-} */
 </style> 
